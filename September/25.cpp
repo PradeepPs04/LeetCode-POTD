@@ -3,29 +3,22 @@
 // TOP-DOWN APPROACH
 class Solution {
 private:
-    int solve(int i, int j, int n, vector<vector<int>>& triangle, vector<vector<int>>& dp)
-    {
-        if(i == n-1 && j < triangle[i].size())  return triangle[i][j];
-        if(j > triangle[i].size())  return 1e9;
+    int solve(vector<vector<int>>& triangle, int i, int j, vector<vector<int>>& dp) {
+        if(i == triangle.size())   return 0;
 
-        if(dp[i][j] != -1)  return dp[i][j];
+        if(dp[i][j] != INT_MIN)  return dp[i][j];
 
-        int down = solve(i+1, j, n, triangle, dp);
-        int down_right = solve(i+1, j+1, n, triangle, dp);
-
-        return dp[i][j] =  min(down, down_right) + triangle[i][j];
+        return dp[i][j] = triangle[i][j] + min(solve(triangle, i + 1, j, dp), solve(triangle, i + 1, j + 1, dp));
     }
 public:
     int minimumTotal(vector<vector<int>>& triangle) {
-        int n = triangle.size();
         vector<vector<int>>dp;
-        for(int i = 0; i < n; i++)
-        {
-            vector<int>row(triangle[i].size(), -1);
-            dp.push_back(row);
+        for(int i = 0; i < triangle.size(); i++) {
+            vector<int>temp(i+1, INT_MIN);
+            dp.push_back(temp);
         }
 
-        return solve(0, 0, n, triangle, dp);
+        return solve(triangle, 0, 0, dp);
     }
 };
 
