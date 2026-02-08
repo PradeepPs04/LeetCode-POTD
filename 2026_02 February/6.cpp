@@ -1,4 +1,5 @@
-// https://leetcode.com/problems/minimum-removals-to-balance-array/?envType=daily-question&envId=2026-02-07
+// https://leetcode.com/problems/minimum-removals-to-balance-array/description/?envType=daily-question&envId=2026-02-06
+
 class Solution {
 public:
     int minRemoval(vector<int>& nums, int k) {
