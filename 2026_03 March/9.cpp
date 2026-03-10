@@ -69,3 +69,44 @@ public:
         return ((startWithOne % MODD) + (startWithZero % MODD)) % MODD;
     }
 };
+
+
+// bottom-up (tabulation)
+class Solution {
+public:
+    int numberOfStableArrays(int zero, int one, int limit) {
+        int MODD = 1e9 + 7;
+
+        vector<vector<vector<int>>>dp(zero+1, vector<vector<int>>(one+1, vector<int>(2, 0)));
+        // base case
+        dp[0][0][0] = 1;
+        dp[0][0][1] = 1; 
+
+        // fill dp table
+        for(int zerosLeft = 0; zerosLeft <= zero; zerosLeft++) {
+            for(int onesLeft = 0; onesLeft <= one; onesLeft++) {
+                if(zerosLeft == 0 && onesLeft == 0) continue; // already filled this state in base case
+
+                // explore 0's
+                int ans = 0;
+                for(int i = 1; i <= min(zerosLeft, limit); i++) {
+                    ans = (ans % MODD + dp[zerosLeft-i][onesLeft][0] % MODD) % MODD;
+                }
+                dp[zerosLeft][onesLeft][1] = ans;
+
+                // explore 1's            
+                ans = 0;
+                for(int i = 1; i <= min(onesLeft, limit); i++) {
+                    ans = (ans % MODD + dp[zerosLeft][onesLeft-i][1] % MODD) % MODD;
+                }
+                dp[zerosLeft][onesLeft][0] = ans;
+            }      
+        }
+
+        // get the answer
+        int startWithOne = dp[zero][one][1];
+        int startWithZero = dp[zero][one][0];
+
+        return (startWithOne % MODD + startWithZero % MODD) % MODD;
+    }
+};
